@@ -35,7 +35,7 @@ const strategyAbi = loadStrategyAbi();
 
 const client = createPublicClient({
   chain: mainnet,
-  transport: http(process.env.RPC_URL || "https://eth.llamarpc.com"),
+  transport: http(process.env.RPC_URL || "https://ethereum-rpc.publicnode.com"),
 });
 
 function fmtEth(v: bigint) {
@@ -145,7 +145,7 @@ async function tick() {
       const setRedeem = (eth: number) => {
         const targetPast = eth / onePastEthNum;
         const ratio = curPastNum / targetPast;
-        if (ratio <= 1) return `0 hours 0 minutes`;
+        if (ratio <= 1) return `X`;
         return toStr(Math.log(ratio) / k);
       };
       timeTo50Redeem = setRedeem(50);
@@ -156,7 +156,7 @@ async function tick() {
       const setMint = (eth: number) => {
         const targetPast = eth / onePastMintEthNum;
         const ratio = curPastNum / targetPast;
-        if (ratio <= 1) return `0 hours 0 minutes`;
+        if (ratio <= 1) return `X`;
         return toStr(Math.log(ratio) / k);
       };
       timeTo50Mint = setMint(50);
@@ -184,8 +184,8 @@ async function tick() {
 
   console.log("");
   console.log("Token");
-  console.log(`- price (1 PAST):     ${onePastEthStr} (redeem)`);
-  console.log(`- price (1 PAST):     ${onePastMintEthStr} (mint)`);
+  console.log(`- price (redeem):     ${onePastEthStr}`);
+  console.log(`- price (mint):       ${onePastMintEthStr}`);
   console.log(`- totalSupply:        ${fmtPastInt(tSupply as bigint, decimalsNum)}`);
   console.log(`- effectiveSupply:    ${fmtPastInt(tEffSupply as bigint, decimalsNum)}`);
   console.log(`- lockedSupply:       ${fmtPastInt(tLocked as bigint, decimalsNum)}`);
@@ -218,5 +218,3 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
-
-

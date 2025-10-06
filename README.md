@@ -6,52 +6,62 @@ A lightweight TypeScript watcher that polls the on-chain strategy and token, the
 - Node.js 18+
 - An Ethereum RPC endpoint (HTTP)
 
-### Install
+### Install (step-by-step)
+1) Install Node Version Manager (nvm):
+   - Follow the official instructions: https://github.com/nvm-sh/nvm
+
+2) Install Node with nvm and set it active:
 ```bash
-npm i viem tsx
+nvm install node
+nvm use node
+```
+
+3) Install dependencies (from package.json):
+```bash
+npm install
 ```
 
 ### Run
 ```bash
 # Minimal
-RPC_URL=https://your.rpc npx tsx watch.ts
+RPC_URL=https://ethereum-rpc.publicnode.com npx tsx watch.ts
 
 # Custom refresh interval (ms) and show ETH for a given PAST amount
 INTERVAL_MS=3000 \
 PAST_AMOUNT=500 \
-RPC_URL=https://your.rpc \
+RPC_URL=https://ethereum-rpc.publicnode.com \
 npx tsx watch.ts
 ```
 
 ### What it shows
 ```bash
-punk.auction watcher @ 2025-10-06T15:29:53.914Z
+punk.auction watcher @ 2025-10-06T20:39:33.964Z
 ================================================================================
 Strategy
-- currentAuctionPrice 427217 PAST (273.487 ETH)
-- price (1 PAST):     0.000640 ETH
+- currentAuctionPrice 66665 PAST
+  - holder:           37.652 ETH
+  - minter:           46.019 ETH
 - auction:            active=true id=0 punkId=4859 start=2025-10-06T11:04:23.000Z
-- decay to 50 ETH:    4 hours 43 minutes
+┌────────┬────────────────────┬────────────────────┐
+│ Target │ Redeem             │ Mint               │
+├────────┼────────────────────┼────────────────────┤
+│ 50 ETH │ X                  │ X                  │
+├────────┼────────────────────┼────────────────────┤
+│ 40 ETH │ X                  │ 0 hours 23 minutes │
+├────────┼────────────────────┼────────────────────┤
+│ 30 ETH │ 0 hours 37 minutes │ 1 hours 11 minutes │
+└────────┴────────────────────┴────────────────────┘
 
 Token
-- totalSupply:        5443982 PAST
-- effectiveSupply:    5443982 PAST
+- price (redeem):     0.000565 ETH
+- price (mint):       0.000690 ETH
+- totalSupply:        5113476 PAST
+- effectiveSupply:    5113476 PAST
 - lockedSupply:       0 PAST
-- reserve:            1161.670 ETH
-- surplus:            24.786 ETH
-- previewRedeem:      0.640 ETH (1000 PAST)
+- reserve:            962.679 ETH
+- surplus:            8.514 ETH
+- previewRedeem:      0.565 ETH (1000 PAST)
 ```
-
-
-- Strategy
-  - currentAuctionPrice: PAST amount (integer) and ETH equivalent
-  - auction: active flag, auction id, punk id, start time (UTC)
-  - decay to 50 ETH: printed twice — holder view (redeem) and minter view (mint)
-- Token
-  - price (1 PAST): redeem and mint prices in ETH (6 decimals)
-  - totalSupply, effectiveSupply, lockedSupply (PAST, integer-rounded)
-  - reserve, surplus (ETH, 3 decimals)
-  - previewRedeem: ETH (3 decimals) for `PAST_AMOUNT` shown as: `previewRedeem: X.XXX ETH (N PAST)`
 
 ### Environment variables
 - RPC_URL: HTTP RPC endpoint (required)
