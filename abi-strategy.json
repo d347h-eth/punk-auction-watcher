@@ -1,0 +1,9 @@
+[
+  {"type":"function","name":"auction","stateMutability":"view","inputs":[],"outputs":[{"type":"tuple","components":[{"name":"active","type":"bool"},{"name":"auctionId","type":"uint256"},{"name":"punkId","type":"uint256"},{"name":"startTime","type":"uint256"}]}]},
+  {"type":"function","name":"currentAuctionPrice","stateMutability":"view","inputs":[],"outputs":[{"type":"uint256"}]},
+  {"type":"function","name":"AUCTION_DECAY_RATE","stateMutability":"view","inputs":[],"outputs":[{"type":"uint256"}]},
+  {"type":"event","name":"AuctionStarted","inputs":[{"indexed":true,"name":"auctionId","type":"uint256"},{"indexed":true,"name":"punkId","type":"uint256"}],"anonymous":false},
+  {"type":"event","name":"AuctionSettled","inputs":[{"indexed":true,"name":"auctionId","type":"uint256"},{"indexed":true,"name":"punkId","type":"uint256"},{"indexed":true,"name":"buyer","type":"address"},{"indexed":false,"name":"price","type":"uint256"}],"anonymous":false},
+  {"type":"receive","stateMutability":"payable"}
+]
+
