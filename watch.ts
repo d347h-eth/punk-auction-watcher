@@ -41,6 +41,9 @@ function fmtPastInt(v: bigint, decimals: number) {
 async function tick() {
   const tokenAbi = loadTokenAbi();
 
+  // Precomputed 1 PAST in base units assuming 18 decimals (standard)
+  const ONE_PAST_BASE = 10n ** 18n;
+
   const mc = await client.multicall({
     allowFailure: false,
     contracts: [
@@ -54,6 +57,8 @@ async function tick() {
       { address: TOKEN_ADDRESS, abi: tokenAbi, functionName: "lockedSupply", args: [] },
       { address: TOKEN_ADDRESS, abi: tokenAbi, functionName: "reserve", args: [] },
       { address: TOKEN_ADDRESS, abi: tokenAbi, functionName: "surplus", args: [] },
+      { address: TOKEN_ADDRESS, abi: tokenAbi, functionName: "previewRedeem", args: [ONE_PAST_BASE] },
+      { address: TOKEN_ADDRESS, abi: tokenAbi, functionName: "previewMint", args: [ONE_PAST_BASE] },
     ],
   });
 
@@ -72,6 +77,8 @@ async function tick() {
   const tLocked = mc[6] as bigint;
   const tReserve = mc[7] as bigint;
   const tSurplus = mc[8] as bigint;
+  const oneOut = mc[9] as bigint; // previewRedeem(1 PAST)
+  const oneMintOut = mc[10] as bigint; // previewMint(1 PAST)
 
   const auction = sAuction;
 
@@ -83,25 +90,13 @@ async function tick() {
   const decimalsNum = Number(tDecimals);
 
   console.log("Strategy");
-  // Fetch only price for 1 PAST, derive other ETH equivalents locally
   let curPriceEthStr = "n/a";
   let curPriceEthNum = 0;
   let onePastEthStr = "n/a";
   let onePastEthNum = 0;
-
-  const onePastBase = parseUnits("1", decimalsNum);
-  const mc2 = await client.multicall({
-    allowFailure: false,
-    contracts: [
-      { address: TOKEN_ADDRESS, abi: tokenAbi, functionName: "previewRedeem", args: [onePastBase] },
-      { address: TOKEN_ADDRESS, abi: tokenAbi, functionName: "previewMint", args: [onePastBase] },
-    ],
-  });
-  const oneOut = mc2[0] as bigint;
   onePastEthNum = Number(formatUnits(oneOut, 18));
   onePastEthStr = `${onePastEthNum.toFixed(6)} ETH`;
   // 1 PAST mint price in ETH (6 decimals)
-  const oneMintOut = mc2[1] as bigint;
   const onePastMintEthNum = Number(formatUnits(oneMintOut, 18));
   const onePastMintEthStr = `${onePastMintEthNum.toFixed(6)} ETH`;
   // Derive auction price ETH

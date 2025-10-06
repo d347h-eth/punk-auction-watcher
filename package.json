@@ -1,7 +1,20 @@
 {
+  "name": "punk-auction-watcher",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "author": "d347h.eth <wagdie.dev@gmail.com>",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "cli-table3": "^0.6.5",
     "tsx": "^4.20.6",
     "viem": "^2.37.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.0",
+    "typescript": "^5.9.3"
   }
 }
