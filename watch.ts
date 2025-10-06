@@ -1,14 +1,3 @@
-// @ts-nocheck
-/*
-  Simple watcher for PunkStrategy and PunkStrategyToken using viem.
-  - Reads ABIs from ./abi-*.json
-  - Polls key view functions and prints a clear dashboard
-
-  Usage:
-    1) npm i viem
-    2) RPC_URL=https://your.rpc.url npx tsx watch.ts
-*/
-
 import { createPublicClient, http, formatUnits, parseUnits } from "viem";
 import Table from "cli-table3";
 import { mainnet } from "viem/chains";
